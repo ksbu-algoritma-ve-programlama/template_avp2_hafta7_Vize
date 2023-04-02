@@ -1,0 +1,33 @@
+name: Unit Test Compile and Upload to Repository
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+        
+      - name: Add initial notTXT
+        run: echo "0" > not.txt
+
+      - name: Build unitTest.c
+        run: gcc -o unitTest unitTest.c
+        
+      - name: Commit changes
+        run: |
+          date > latestPushDate.txt
+          echo not.txt
+          ./unitTest
+          git config user.name ksbu-algoritma-ve-programlama
+          git config user.email ksbu.avp@gmail.com
+          git add .
+          git commit -m "generated"
+          git push
